@@ -21,7 +21,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include <stdio.h>
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,7 +50,16 @@ void SystemClock_Config(void);
 static void MX_GPIO_Init(void);
 static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
-
+size_t __write(int handle, const unsigned char * buffer, size_t size)
+{
+  HAL_UART_Transmit(&huart2, (uint8_t *) buffer, size, HAL_MAX_DELAY);
+  return size;
+}
+int __io_putchar(int ch)
+{
+  HAL_UART_Transmit(&huart2, (uint8_t *)&ch, 1, HAL_MAX_DELAY);
+  return ch;
+}
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -88,7 +97,7 @@ int main(void)
   MX_GPIO_Init();
   MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
-
+  printf("\r\n========Start transmitter=======\r\n");
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -98,6 +107,8 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
+	  printf("transmitter message\r\n");
+	  HAL_Delay(100);
   }
   /* USER CODE END 3 */
 }
@@ -159,7 +170,7 @@ static void MX_USART2_UART_Init(void)
   /* USER CODE END USART2_Init 1 */
   huart2.Instance = USART2;
   huart2.Init.BaudRate = 115200;
-  huart2.Init.WordLength = UART_WORDLENGTH_7B;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
   huart2.Init.StopBits = UART_STOPBITS_1;
   huart2.Init.Parity = UART_PARITY_NONE;
   huart2.Init.Mode = UART_MODE_TX_RX;
